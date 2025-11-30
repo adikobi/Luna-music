@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <rect width="200" height="200" fill="#f0f2f5"/>
+  <circle cx="100" cy="100" r="80" fill="#007bff"/>
+  <text x="100" y="115" font-family="Arial, sans-serif" font-size="24" fill="white" text-anchor="middle">Luna</text>
+  <text x="100" y="145" font-family="Arial, sans-serif" font-size="24" fill="white" text-anchor="middle">Music</text>
+  <path d="M100,20 A80,80 0 0,0 100,180 A80,80 0 0,0 100,20 Z M100,30 A70,70 0 0,1 100,170 A70,70 0 0,1 100,30 Z" fill="none" stroke="white" stroke-width="2"/>
+  <path d="M80,110 L80,70 A10,10 0 0,1 90,60 A10,10 0 0,1 100,70 L100,110 M80,110 A15,15 0 0,0 65,125 A15,15 0 0,0 80,140 Z M100,110 A15,15 0 0,1 115,125 A15,15 0 0,1 100,140 Z" fill="white"/>
+</svg>
