@@ -1,15 +1,22 @@
-const words = [
-    "אהבה", "בית", "דרך", "לב", "שמש", "ירח", "כוכב", "ים", "קיץ", "חורף",
-    "אור", "חושך", "חלום", "תקווה", "שיר", "מנגינה", "ריקוד", "צחוק", "דמעה",
-    "שמיים", "אדמה", "רוח", "גשם", "פרח", "עץ", "ילד", "ילדה", "איש", "אישה",
-    "חבר", "משפחה", "זיכרון", "געגוע", "נשיקה", "חיבוק", "פרידה", "מחר", "אתמול",
-    "היום", "תמיד", "לפעמים", "אף פעם", "סוד", "אמת", "שקר", "כאב", "שמחה",
-    "אושר", "עצב", "חיים", "מוות", "תפילה", "אמונה", "מלחמה", "שלום"
-];
+let words = [];
+
+async function fetchWords() {
+    try {
+        const response = await fetch('words.json');
+        words = await response.json();
+        startButton.disabled = false;
+        startButton.textContent = "התחל משחק";
+    } catch (error) {
+        console.error('Error fetching words:', error);
+        wordElement.textContent = "שגיאה בטעינת מילים";
+    }
+}
 
 const startScreen = document.getElementById('start-screen');
 const gameScreen = document.getElementById('game-screen');
 const startButton = document.getElementById('start-button');
+startButton.disabled = true;
+startButton.textContent = "טוען...";
 const newWordButton = document.getElementById('new-word-button');
 const wordElement = document.getElementById('word');
 
@@ -22,6 +29,12 @@ startButton.addEventListener('click', () => {
 newWordButton.addEventListener('click', generateNewWord);
 
 function generateNewWord() {
+    if (words.length === 0) {
+        wordElement.textContent = "טוען מילים...";
+        return;
+    }
     const randomIndex = Math.floor(Math.random() * words.length);
     wordElement.textContent = words[randomIndex];
 }
+
+fetchWords();
