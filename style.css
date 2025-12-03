@@ -35,8 +35,7 @@ body {
     margin-top: 20px;
     cursor: pointer;
     transition: transform 0.3s ease;
-    filter: hue-rotate(180deg); /* Change the color of the logo */
-    animation: float 3s ease-in-out infinite;
+    animation: float 3s ease-in-out infinite, colorize 10s ease-in-out infinite;
 }
 
 #logo:hover {
@@ -107,6 +106,11 @@ body {
 @keyframes float {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
+}
+
+@keyframes colorize {
+    0%, 100% { filter: hue-rotate(0deg); }
+    50% { filter: hue-rotate(360deg); }
 }
 
 /* --- Responsive Design --- */
