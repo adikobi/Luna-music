@@ -11,16 +11,22 @@
 </head>
 <body>
     <div id="app">
-        <div id="start-screen">
-            <img id="logo" src="assets/logo.svg" alt="לוגו">
-            <button id="start-button">התחל משחק</button>
+        <div class="settings-container">
+            <label for="speech-mode">מצב הקראה:</label>
+            <select id="speech-mode">
+                <option value="text-only">רק מילה כתובה</option>
+                <option value="text-and-speech">מילה כתובה + הקראה</option>
+                <option value="speech-only">רק הקראה</option>
+            </select>
         </div>
-        <div id="game-screen" class="hidden">
-            <div id="word-container">
-                <p id="word"></p>
-            </div>
-            <button id="new-word-button">מילה חדשה</button>
+        <div id="word-container">
+            <p id="word">לחץ על הלוגו כדי להתחיל</p>
         </div>
+        <svg id="logo" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+          <circle class="logo-circle" cx="100" cy="100" r="90"/>
+          <text x="100" y="110" font-family="Heebo, sans-serif" font-size="30" fill="white" text-anchor="middle" font-weight="bold">Luna</text>
+          <path d="M85,130 Q100,145 115,130" stroke="white" stroke-width="3" fill="none" />
+        </svg>
     </div>
     <script src="script.js"></script>
 </body>
