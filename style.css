@@ -47,6 +47,34 @@ body {
     50% { transform: translateY(-10px); }
 }
 
+.settings-container {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-container label {
+    font-size: 18px;
+    margin-left: 10px;
+}
+
+.settings-container select {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #333;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%228%22%20viewBox%3D%220%200%2012%208%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M1.41%200.59L6%205.17L10.59%200.59L12%202L6%208L0%202L1.41%200.59Z%22%20fill%3D%22%23333%22/%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    padding-right: 40px;
+}
+
 #start-button, #new-word-button {
     padding: 15px 40px;
     font-size: 20px;

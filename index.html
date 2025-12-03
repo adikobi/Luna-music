@@ -13,6 +13,14 @@
     <div id="app">
         <div id="start-screen">
             <img id="logo" src="assets/logo.svg" alt="לוגו">
+            <div class="settings-container">
+                <label for="speech-mode">מצב הקראה:</label>
+                <select id="speech-mode">
+                    <option value="text-only">רק מילה כתובה</option>
+                    <option value="text-and-speech">מילה כתובה + הקראה</option>
+                    <option value="speech-only">רק הקראה</option>
+                </select>
+            </div>
             <button id="start-button">התחל משחק</button>
         </div>
         <div id="game-screen" class="hidden">

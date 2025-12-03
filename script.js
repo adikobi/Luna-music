@@ -19,6 +19,23 @@ startButton.disabled = true;
 startButton.textContent = "טוען...";
 const newWordButton = document.getElementById('new-word-button');
 const wordElement = document.getElementById('word');
+const speechModeSelect = document.getElementById('speech-mode');
+
+let currentSpeechMode = 'text-only';
+
+speechModeSelect.addEventListener('change', (e) => {
+    currentSpeechMode = e.target.value;
+});
+
+function speakWord(word) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(`המילה היא: ${word}`);
+        utterance.lang = 'he-IL';
+        window.speechSynthesis.speak(utterance);
+    } else {
+        console.error('Speech Synthesis not supported');
+    }
+}
 
 startButton.addEventListener('click', () => {
     startScreen.classList.add('hidden');
@@ -34,7 +51,17 @@ function generateNewWord() {
         return;
     }
     const randomIndex = Math.floor(Math.random() * words.length);
-    wordElement.textContent = words[randomIndex];
+    const newWord = words[randomIndex];
+
+    wordElement.textContent = '';
+
+    if (currentSpeechMode === 'text-only' || currentSpeechMode === 'text-and-speech') {
+        wordElement.textContent = newWord;
+    }
+
+    if (currentSpeechMode === 'speech-only' || currentSpeechMode === 'text-and-speech') {
+        speakWord(newWord);
+    }
 }
 
 fetchWords();
