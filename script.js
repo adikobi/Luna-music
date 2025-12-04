@@ -1,40 +1,50 @@
 let words = [];
+let currentWord = '';
+
+const logoButton = document.getElementById('logo-button');
+const speechButton = document.getElementById('speech-button');
+const wordElement = document.getElementById('word');
 
 async function fetchWords() {
     try {
         const response = await fetch('words.json');
         words = await response.json();
-        startButton.disabled = false;
-        startButton.textContent = "התחל משחק";
+        logoButton.disabled = false;
+        generateNewWord(); // Generate the first word on load
     } catch (error) {
         console.error('Error fetching words:', error);
         wordElement.textContent = "שגיאה בטעינת מילים";
     }
 }
 
-const startScreen = document.getElementById('start-screen');
-const gameScreen = document.getElementById('game-screen');
-const startButton = document.getElementById('start-button');
-startButton.disabled = true;
-startButton.textContent = "טוען...";
-const newWordButton = document.getElementById('new-word-button');
-const wordElement = document.getElementById('word');
-
-startButton.addEventListener('click', () => {
-    startScreen.classList.add('hidden');
-    gameScreen.classList.remove('hidden');
-    generateNewWord();
-});
-
-newWordButton.addEventListener('click', generateNewWord);
+function speak(text) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(`המילה היא: ${text}`);
+        utterance.lang = 'he-IL';
+        window.speechSynthesis.speak(utterance);
+    } else {
+        console.error('Speech synthesis not supported');
+    }
+}
 
 function generateNewWord() {
     if (words.length === 0) {
-        wordElement.textContent = "טוען מילים...";
+        wordElement.textContent = "טוען...";
         return;
     }
+
     const randomIndex = Math.floor(Math.random() * words.length);
-    wordElement.textContent = words[randomIndex];
+    currentWord = words[randomIndex];
+    wordElement.textContent = currentWord;
 }
 
+logoButton.addEventListener('click', generateNewWord);
+speechButton.addEventListener('click', () => {
+    if (currentWord) {
+        speak(currentWord);
+    }
+});
+
+// Initial setup
+logoButton.disabled = true;
 fetchWords();
