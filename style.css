@@ -163,6 +163,8 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 80px; /* Ensure clickability */
+    width: 100%; /* Ensure it has width */
 }
 
 #word {
