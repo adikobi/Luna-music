@@ -129,6 +129,35 @@ main {
     width: 80%;
 }
 
+#speech-menu {
+    position: absolute;
+    top: -90px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--off-white);
+    border: 3px solid var(--black);
+    border-radius: 20px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 2;
+}
+
+#speech-menu button {
+    background-color: var(--lime-green);
+    border: 2px solid var(--black);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#speech-menu.hidden {
+    display: none;
+}
+
 #word-container {
     flex-grow: 1;
     display: flex;

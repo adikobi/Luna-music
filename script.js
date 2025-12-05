@@ -1,9 +1,14 @@
 let words = [];
 let currentWord = '';
+let currentMode = 'read-and-word'; // read-only, word-only, read-and-word
 
 const logoButton = document.getElementById('logo-button');
 const speechButton = document.getElementById('speech-button');
 const wordElement = document.getElementById('word');
+const speechMenu = document.getElementById('speech-menu');
+const readOnlyButton = document.getElementById('read-only-button');
+const wordOnlyButton = document.getElementById('word-only-button');
+const readAndWordButton = document.getElementById('read-and-word-button');
 
 async function fetchWords() {
     try {
@@ -27,6 +32,23 @@ function speak(text) {
     }
 }
 
+function updateUI() {
+    window.speechSynthesis.cancel();
+    switch (currentMode) {
+        case 'read-only':
+            wordElement.textContent = '';
+            speak(currentWord);
+            break;
+        case 'word-only':
+            wordElement.textContent = currentWord;
+            break;
+        case 'read-and-word':
+            wordElement.textContent = currentWord;
+            speak(currentWord);
+            break;
+    }
+}
+
 function generateNewWord() {
     if (words.length === 0) {
         wordElement.textContent = "טוען...";
@@ -35,15 +57,33 @@ function generateNewWord() {
 
     const randomIndex = Math.floor(Math.random() * words.length);
     currentWord = words[randomIndex];
-    wordElement.textContent = currentWord;
+    updateUI();
 }
 
-logoButton.addEventListener('click', generateNewWord);
 speechButton.addEventListener('click', () => {
-    if (currentWord) {
-        speak(currentWord);
-    }
+    speechMenu.classList.toggle('hidden');
 });
+
+readOnlyButton.addEventListener('click', () => {
+    currentMode = 'read-only';
+    speechMenu.classList.add('hidden');
+    updateUI();
+});
+
+wordOnlyButton.addEventListener('click', () => {
+    currentMode = 'word-only';
+    speechMenu.classList.add('hidden');
+    updateUI();
+});
+
+readAndWordButton.addEventListener('click', () => {
+    currentMode = 'read-and-word';
+    speechMenu.classList.add('hidden');
+    updateUI();
+});
+
+logoButton.addEventListener('click', generateNewWord);
+
 
 // Initial setup
 logoButton.disabled = true;
