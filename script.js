@@ -84,6 +84,12 @@ readAndWordButton.addEventListener('click', () => {
 
 logoButton.addEventListener('click', generateNewWord);
 
+document.getElementById('word-container').addEventListener('click', () => {
+    if (currentMode === 'read-only') {
+        wordElement.textContent = currentWord;
+    }
+});
+
 
 // Initial setup
 logoButton.disabled = true;
