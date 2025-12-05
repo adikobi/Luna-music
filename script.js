@@ -5,6 +5,7 @@ let currentMode = 'read-and-word'; // read-only, word-only, read-and-word
 const logoButton = document.getElementById('logo-button');
 const speechButton = document.getElementById('speech-button');
 const wordElement = document.getElementById('word');
+const wordContainer = document.getElementById('word-container');
 const speechMenu = document.getElementById('speech-menu');
 const readOnlyButton = document.getElementById('read-only-button');
 const wordOnlyButton = document.getElementById('word-only-button');
@@ -84,6 +85,11 @@ readAndWordButton.addEventListener('click', () => {
 
 logoButton.addEventListener('click', generateNewWord);
 
+wordContainer.addEventListener('click', () => {
+    if (currentMode === 'read-only') {
+        wordElement.textContent = currentWord;
+    }
+});
 
 // Initial setup
 logoButton.disabled = true;
