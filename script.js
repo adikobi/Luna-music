@@ -1,70 +1,90 @@
 let words = [];
 let currentWord = '';
+let currentMode = 'read-and-word'; // read-only, word-only, read-and-word
+
+const logoButton = document.getElementById('logo-button');
+const speechButton = document.getElementById('speech-button');
+const wordElement = document.getElementById('word');
+const speechMenu = document.getElementById('speech-menu');
+const readOnlyButton = document.getElementById('read-only-button');
+const wordOnlyButton = document.getElementById('word-only-button');
+const readAndWordButton = document.getElementById('read-and-word-button');
 
 async function fetchWords() {
     try {
         const response = await fetch('words.json');
         words = await response.json();
-        newWordButton.disabled = false;
-        newWordButton.textContent = "מילה חדשה";
+        logoButton.disabled = false;
+        generateNewWord(); // Generate the first word on load
     } catch (error) {
         console.error('Error fetching words:', error);
         wordElement.textContent = "שגיאה בטעינת מילים";
     }
 }
 
-const newWordButton = document.getElementById('new-word-button');
-const wordElement = document.getElementById('word');
-newWordButton.disabled = true;
-newWordButton.textContent = "טוען...";
-const speechModeSelect = document.getElementById('speech-mode');
-const wordContainer = document.getElementById('word-container');
-
-let currentSpeechMode = 'text-only';
-
-speechModeSelect.addEventListener('change', (e) => {
-    currentSpeechMode = e.target.value;
-});
-
-function speakWord(word) {
+function speak(text) {
     if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(`המילה היא: ${word}`);
+        const utterance = new SpeechSynthesisUtterance(`המילה היא: ${text}`);
         utterance.lang = 'he-IL';
         window.speechSynthesis.speak(utterance);
     } else {
-        console.error('Speech Synthesis not supported');
+        console.error('Speech synthesis not supported');
     }
 }
 
-wordContainer.addEventListener('click', () => {
-    if (currentSpeechMode === 'speech-only' && wordElement.textContent !== currentWord) {
-        wordElement.textContent = currentWord;
+function updateUI() {
+    window.speechSynthesis.cancel();
+    switch (currentMode) {
+        case 'read-only':
+            wordElement.textContent = '';
+            speak(currentWord);
+            break;
+        case 'word-only':
+            wordElement.textContent = currentWord;
+            break;
+        case 'read-and-word':
+            wordElement.textContent = currentWord;
+            speak(currentWord);
+            break;
     }
-});
-
-newWordButton.addEventListener('click', generateNewWord);
+}
 
 function generateNewWord() {
     if (words.length === 0) {
-        wordElement.textContent = "טוען מילים...";
+        wordElement.textContent = "טוען...";
         return;
     }
+
     const randomIndex = Math.floor(Math.random() * words.length);
-    currentWord = words[randomIndex]; // Assign to currentWord
-
-    wordElement.textContent = ''; // Clear previous word
-
-    if (currentSpeechMode === 'text-only') {
-        wordElement.textContent = currentWord;
-    } else if (currentSpeechMode === 'text-and-speech') {
-        wordElement.textContent = currentWord;
-        speakWord(currentWord);
-    } else if (currentSpeechMode === 'speech-only') {
-        // A single space is used as a placeholder. This ensures the container
-        // has a height and is clickable, allowing the user to reveal the word.
-        wordElement.textContent = ' ';
-        speakWord(currentWord);
-    }
+    currentWord = words[randomIndex];
+    updateUI();
 }
 
+speechButton.addEventListener('click', () => {
+    speechMenu.classList.toggle('hidden');
+});
+
+readOnlyButton.addEventListener('click', () => {
+    currentMode = 'read-only';
+    speechMenu.classList.add('hidden');
+    updateUI();
+});
+
+wordOnlyButton.addEventListener('click', () => {
+    currentMode = 'word-only';
+    speechMenu.classList.add('hidden');
+    updateUI();
+});
+
+readAndWordButton.addEventListener('click', () => {
+    currentMode = 'read-and-word';
+    speechMenu.classList.add('hidden');
+    updateUI();
+});
+
+logoButton.addEventListener('click', generateNewWord);
+
+
+// Initial setup
+logoButton.disabled = true;
 fetchWords();
