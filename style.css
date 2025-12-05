@@ -22,6 +22,7 @@ body {
     align-items: center;
 }
 
+/* Main App Container */
 #app {
     width: 100%;
     height: 100%;
@@ -37,6 +38,7 @@ body {
 .background-circles {
     position: absolute;
     width: 100%;
+    max-width: 420px;
     height: 100%;
     z-index: 0;
 }
@@ -102,7 +104,6 @@ main {
     border-radius: 40px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
     padding: 20px;
     box-sizing: border-box;
@@ -121,7 +122,6 @@ main {
     top: -30px;
     left: 20px;
     display: flex;
-    justify-content: center;
     align-items: center;
 }
 

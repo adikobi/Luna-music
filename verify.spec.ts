@@ -1,4 +1,3 @@
-
 import { test, expect } from '@playwright/test';
 
 test('verify new high-contrast design and functionality', async ({ page }) => {
