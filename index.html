@@ -18,6 +18,13 @@
             <div class="circle circle-4"></div>
             <div class="circle circle-5"></div>
         </div>
+        <header id="game-header">
+            <button id="mute-button" aria-label="השתק">🔊</button>
+            <div id="score-board">
+                <div class="score-item">ניקוד: <span id="current-score">0</span></div>
+                <div class="score-item">שיא: <span id="high-score">0</span></div>
+            </div>
+        </header>
         <main>
             <div id="word-card">
                 <button id="speech-button">
@@ -31,6 +38,10 @@
                 <div id="word-container">
                     <p id="word">שמיים</p>
                 </div>
+                <button id="success-button" class="hidden">
+                    <span class="star-icon">⭐</span>
+                    <span class="text">הצלחתי!</span>
+                </button>
             </div>
         </main>
         <footer>
