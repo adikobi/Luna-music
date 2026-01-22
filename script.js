@@ -12,9 +12,80 @@ const readAndWordButton = document.getElementById('read-and-word-button');
 const currentScoreElement = document.getElementById('current-score');
 const highScoreElement = document.getElementById('high-score');
 const successButton = document.getElementById('success-button');
+const muteButton = document.getElementById('mute-button');
 
 let score = 0;
 let highScore = localStorage.getItem('luna-high-score') || 0;
+
+// Sound Engine
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let isMuted = false;
+
+// C Major Pentatonic Scale frequencies
+const scale = [
+    261.63, // C4
+    293.66, // D4
+    329.63, // E4
+    392.00, // G4
+    440.00, // A4
+    523.25, // C5
+    587.33, // D5
+    659.25, // E5
+    783.99, // G5
+    880.00  // A5
+];
+
+function playNote(noteIndex) {
+    if (isMuted) return;
+
+    // Resume context if suspended (browser policy)
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    // Pick note from scale, loop if score exceeds scale length
+    const frequency = scale[noteIndex % scale.length];
+    // Add an octave for every full scale loop to make it climb higher!
+    const octaveMultiplier = Math.pow(2, Math.floor(noteIndex / scale.length));
+
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(frequency * octaveMultiplier, audioCtx.currentTime);
+
+    // Envelope (Attack/Decay)
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.05); // Attack
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5); // Decay
+
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 0.5);
+}
+
+function playResetSound() {
+    if (isMuted) return;
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    oscillator.type = 'triangle';
+    oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.4);
+
+    gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
+
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 0.4);
+}
 
 async function fetchWords() {
     try {
@@ -97,8 +168,6 @@ readAndWordButton.addEventListener('click', () => {
     updateUI();
 });
 
-logoButton.addEventListener('click', generateNewWord);
-
 document.getElementById('word-container').addEventListener('click', () => {
     if (currentMode === 'read-only') {
         wordElement.textContent = currentWord;
@@ -107,6 +176,7 @@ document.getElementById('word-container').addEventListener('click', () => {
 });
 
 successButton.addEventListener('click', (e) => {
+    playNote(score); // Play note based on current streak index before incrementing? Or after? Let's do current.
     score++;
     if (score > highScore) {
         highScore = score;
@@ -115,14 +185,21 @@ successButton.addEventListener('click', (e) => {
     updateScoreUI();
     createConfetti(e.clientX, e.clientY);
 
-    // Delay slightly to let animation start before switching? No, immediate is snappier.
     generateNewWord();
 });
 
 // Reset score on skip
 logoButton.addEventListener('click', () => {
+    if (score > 0) playResetSound();
     score = 0;
     updateScoreUI();
+    generateNewWord(); // Actually generate new word on skip too
+});
+
+muteButton.addEventListener('click', () => {
+    isMuted = !isMuted;
+    muteButton.textContent = isMuted ? '🔇' : '🔊';
+    muteButton.setAttribute('aria-label', isMuted ? 'בטל השתקה' : 'השתק');
 });
 
 function createConfetti(x, y) {

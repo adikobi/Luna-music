@@ -99,14 +99,39 @@ body {
     animation-delay: -4s;
 }
 
-/* Score Board */
-#score-board {
+/* Game Header (Score + Mute) */
+#game-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
     padding: 20px 30px 0;
     box-sizing: border-box;
     z-index: 10;
+}
+
+#mute-button {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid var(--black);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 2px 2px 0px var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#mute-button:active {
+    transform: scale(0.95);
+    box-shadow: 1px 1px 0px var(--black);
+}
+
+#score-board {
+    display: flex;
+    gap: 15px;
     font-size: 1.1rem;
     font-weight: 900;
 }
