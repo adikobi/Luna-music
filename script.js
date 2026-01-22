@@ -9,6 +9,12 @@ const speechMenu = document.getElementById('speech-menu');
 const readOnlyButton = document.getElementById('read-only-button');
 const wordOnlyButton = document.getElementById('word-only-button');
 const readAndWordButton = document.getElementById('read-and-word-button');
+const currentScoreElement = document.getElementById('current-score');
+const highScoreElement = document.getElementById('high-score');
+const successButton = document.getElementById('success-button');
+
+let score = 0;
+let highScore = localStorage.getItem('luna-high-score') || 0;
 
 async function fetchWords() {
     try {
@@ -32,8 +38,15 @@ function speak(text) {
     }
 }
 
+function updateScoreUI() {
+    currentScoreElement.textContent = score;
+    highScoreElement.textContent = highScore;
+}
+
 function updateUI() {
     window.speechSynthesis.cancel();
+    successButton.classList.add('hidden'); // Default hidden
+
     switch (currentMode) {
         case 'read-only':
             wordElement.textContent = '';
@@ -41,10 +54,12 @@ function updateUI() {
             break;
         case 'word-only':
             wordElement.textContent = currentWord;
+            successButton.classList.remove('hidden');
             break;
         case 'read-and-word':
             wordElement.textContent = currentWord;
             speak(currentWord);
+            successButton.classList.remove('hidden');
             break;
     }
 }
@@ -87,10 +102,56 @@ logoButton.addEventListener('click', generateNewWord);
 document.getElementById('word-container').addEventListener('click', () => {
     if (currentMode === 'read-only') {
         wordElement.textContent = currentWord;
+        successButton.classList.remove('hidden');
     }
 });
+
+successButton.addEventListener('click', (e) => {
+    score++;
+    if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('luna-high-score', highScore);
+    }
+    updateScoreUI();
+    createConfetti(e.clientX, e.clientY);
+
+    // Delay slightly to let animation start before switching? No, immediate is snappier.
+    generateNewWord();
+});
+
+// Reset score on skip
+logoButton.addEventListener('click', () => {
+    score = 0;
+    updateScoreUI();
+});
+
+function createConfetti(x, y) {
+    for (let i = 0; i < 30; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        const colors = ['#ceff1a', '#1a8cff', '#ff0055', '#ffd700'];
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.left = x + 'px';
+        confetti.style.top = y + 'px';
+        document.body.appendChild(confetti);
+
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = 5 + Math.random() * 10;
+        const tx = Math.cos(angle) * velocity * 20;
+        const ty = Math.sin(angle) * velocity * 20;
+
+        confetti.animate([
+            { transform: 'translate(0,0) scale(1)', opacity: 1 },
+            { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+        ], {
+            duration: 800,
+            easing: 'cubic-bezier(0, .9, .57, 1)',
+        }).onfinish = () => confetti.remove();
+    }
+}
 
 
 // Initial setup
 logoButton.disabled = true;
+updateScoreUI();
 fetchWords();
